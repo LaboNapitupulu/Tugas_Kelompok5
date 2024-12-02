@@ -1,7 +1,6 @@
 import tkinter as tk
 import requests
 import random
-from utils import clear_frame 
 
 def show_random_quote(frame, label=None):
     """Menampilkan kutipan acak dari GitHub"""
