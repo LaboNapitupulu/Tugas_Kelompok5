@@ -2,6 +2,7 @@ import tkinter as tk
 
 from features.calculator import show_calculator
 from features.todolist import show_todolist
+from features.timer import show_timer
 
 
 def main():
@@ -20,7 +21,8 @@ def main():
     menu.add_cascade(label="Fitur", menu=app_menu)
 
     app_menu.add_command(label="Kalkulator", command=lambda: show_calculator(window, frame))
-    app_menu.add_command(label="Daftar Tugas", command=lambda: show_todolist(window, frame))  # Perbaikan di sini, hanya frame
+    app_menu.add_command(label="Daftar Tugas", command=lambda: show_todolist(window, frame))
+    app_menu.add_command(label="Timer Belajar", command=lambda: show_timer(window, frame))  # Perbaikan di sini, hanya frame
 
     window.mainloop()
 
