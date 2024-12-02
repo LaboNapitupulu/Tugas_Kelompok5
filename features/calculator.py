@@ -1,57 +1,69 @@
 import tkinter as tk
-from utils import clear_frame  # Mengimpor clear_frame dari utils.py
 
-def press(button_text, entry):
-    """Menambahkan teks tombol ke entry"""
+def press(value, entry):
+    """Menambahkan angka atau operator ke dalam input kalkulator"""
     current_text = entry.get()
     entry.delete(0, tk.END)
-    entry.insert(tk.END, current_text + str(button_text))
+    entry.insert(tk.END, current_text + str(value))
+
+def clear(entry):
+    """Menghapus input kalkulator"""
+    entry.delete(0, tk.END)
 
 def calculate(entry):
-    """Menghitung ekspresi matematika"""
+    """Menghitung hasil dari input"""
     try:
         result = eval(entry.get())
         entry.delete(0, tk.END)
-        entry.insert(tk.END, str(result))
+        entry.insert(tk.END, result)
     except Exception as e:
         entry.delete(0, tk.END)
         entry.insert(tk.END, "Error")
 
-def clear(entry):
-    """Menghapus semua input"""
-    entry.delete(0, tk.END)
+def backspace(entry):
+    """Menghapus karakter terakhir dari input kalkulator"""
+    current_text = entry.get()
+    entry.delete(len(current_text) - 1, tk.END)
 
 def show_calculator(window, frame):
-    """Menampilkan fitur Kalkulator Sederhana"""
-    clear_frame(frame)  # Memanggil fungsi clear_frame
-    label = tk.Label(frame, text="Kalkulator Sederhana", font=("Arial", 20))
-    label.pack(pady=20)
+    """Menampilkan aplikasi kalkulator"""
+    from utils import clear_frame 
 
-    entry = tk.Entry(frame, font=("Arial", 18), justify="right", bd=10)
-    entry.pack(pady=10, fill="both", expand=True)
+    # Menghapus frame sebelumnya
+    clear_frame(frame)
+
+    # Menampilkan Kalkulator
+    label = tk.Label(frame, text="Kalkulator", font=("Arial", 18))
+    label.pack(pady=10)
+
+    entry = tk.Entry(frame, font=("Arial", 18), width=20, borderwidth=2, relief="solid")
+    entry.pack(pady=10)
 
     button_frame = tk.Frame(frame)
     button_frame.pack()
 
     buttons = [
-        ("7", 7), ("8", 8), ("9", 9), ("/", "/"),
-        ("4", 4), ("5", 5), ("6", 6), ("", ""),
-        ("1", 1), ("2", 2), ("3", 3), ("-", "-"),
-        ("0", 0), ("C", "C"), ("=", "="), ("+", "+")
+        ('7', '8', '9', '/'),
+        ('4', '5', '6', '*'),
+        ('1', '2', '3', '-'),
+        ('0', '.', '=', '+')
     ]
 
-    for row in range(4):
-        for col in range(4):
-            button_text, value = buttons[row * 4 + col]
-            if button_text == "C":
-                button = tk.Button(button_frame, text=button_text, font=("Arial", 14), command=lambda: clear(entry))
-            elif button_text == "=":
-                button = tk.Button(button_frame, text=button_text, font=("Arial", 14), command=lambda: calculate(entry))
-            else:
-                button = tk.Button(button_frame, text=button_text, font=("Arial", 14), command=lambda v=value: press(v, entry))
-            button.grid(row=row, column=col, ipadx=20, ipady=20, padx=5, pady=5, sticky="nsew")
+    for row in buttons:
+        button_row = tk.Frame(button_frame)
+        button_row.pack()
 
-     # Membuat tombol untuk menyesuaikan ukuran kolom dan baris
-    for i in range(4):
-        button_frame.grid_columnconfigure(i, weight=1)
-        button_frame.grid_rowconfigure(i,weight=1)
+        for button_text in row:
+            button = tk.Button(button_row, text=button_text, font=("Arial", 14),
+                               command=lambda v=button_text: press(v, entry) if v != "=" else calculate(entry))
+            button.pack(side="left", padx=5)
+
+    # Tombol clear
+    clear_button = tk.Button(frame, text="Clear", font=("Arial", 14), command=lambda: clear(entry))
+    clear_button.pack(pady=5)
+
+    # Tombol backspace
+    backspace_button = tk.Button(frame, text="←", font=("Arial", 14), command=lambda: backspace(entry))
+    backspace_button.pack(pady=5)
+
+
